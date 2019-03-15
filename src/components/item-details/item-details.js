@@ -15,7 +15,6 @@ const Record = ({ field, label, item }) => {
 export { Record };
 
 export default class PersonDetails extends Component {
-
   state = {
     item: null,
     image: null,
@@ -70,12 +69,14 @@ export default class PersonDetails extends Component {
   render() {
     const { item, loading, image } = this.state;
 
-    const data = React.Children.map(this.props.children, (child) => {
-      return React.cloneElement(child, {item});
+    const data = React.Children.map(this.props.children, child => {
+      return React.cloneElement(child, { item });
     });
     const spinner = loading ? <Spinner /> : null;
     const hasData = !loading;
-    const content = hasData ? <PersonView item={item} image={image} data={data}/> : null;
+    const content = hasData ? (
+      <PersonView item={item} image={image} data={data} />
+    ) : null;
 
     return (
       <div className="person-details card">
@@ -93,9 +94,7 @@ const PersonView = ({ item, image, data }) => {
 
       <div className="card-body">
         <h4>{name}</h4>
-        <ul className="list-group list-group-flush">
-        {data}
-        </ul>
+        <ul className="list-group list-group-flush">{data}</ul>
       </div>
     </React.Fragment>
   );
