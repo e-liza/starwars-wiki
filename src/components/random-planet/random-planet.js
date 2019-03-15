@@ -4,7 +4,7 @@ import Spinner from '../spinner/';
 import ErrorIndicator from '../error-indicator/';
 import SwapiService from '../../services/swapi-service';
 
-import errorGif from  './planet.gif';
+//import errorGif from  './planet.gif';
 
 import './random-planet.css';
 
@@ -25,27 +25,14 @@ export default class RandomPlanet extends Component {
     clearInterval(this.interval);
   }
 
-  onImgUpdate(url){
-    this.swapiService
-      .getImg(url)
-      .then((value) => {
-        this.setState({
-          planet: {
-            ...this.state.planet,
-            imgUrl: value,
-          }
-        });
-      })
-      .catch(this.onImgError)
-  }
+
 
   onPlanetLoaded = (planet) => {
     this.setState({
       planet,
       loading: false,
       error: false
-    });
-    this.onImgUpdate(planet.imgUrl);
+    })
   };
   onError = (err) => {
     this.setState({
@@ -53,14 +40,7 @@ export default class RandomPlanet extends Component {
       loading: false
     });
   };
-  onImgError = err => {
-    this.setState({
-      planet: {
-        ...this.state.planet,
-        imgUrl: errorGif,
-      }
-    });
-  };
+
  
   updatePlanet=()=> {
     const id = Math.floor(Math.random()*25) + 2;
