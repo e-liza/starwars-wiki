@@ -5,19 +5,19 @@ import errorGif from '../../assets/planet.gif';
 
 import { withSwapiService } from '../hoc-helpers';
 
-const PersonDetails = ({ itemId, swapiService }) => {
-  const { getPerson, getPersonImage } = swapiService;
+const PersonDetails = props => {
   return (
-    <ItemDetails
-      itemId={itemId}
-      getData={getPerson}
-      getImage={getPersonImage}
-      imgFb={errorGif}
-    >
+    <ItemDetails {...props} imgFb={errorGif}>
       <Record field="gender" label="Gender" />
       <Record field="eyeColor" label="Eye Color" />
     </ItemDetails>
   );
 };
 
-export default withSwapiService(PersonDetails);
+const mapMethodsToProps = swapiService => {
+  return {
+    getData: swapiService.getPerson,
+    getImage: swapiService.getPersonImage
+  };
+};
+export default withSwapiService(PersonDetails, mapMethodsToProps);
