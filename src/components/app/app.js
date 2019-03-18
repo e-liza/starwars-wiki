@@ -20,10 +20,9 @@ import {
 import './app.css';
 
 export default class App extends Component {
-  swapiService = new DummySwapiService();
-
   state = {
     showRandomPlanet: true,
+    swapiService: new DummySwapiService(),
     hasError: false
   };
 
@@ -39,13 +38,24 @@ export default class App extends Component {
     this.setState({ hasError: true });
   }
 
+  onServiceChange = () => {
+    this.setState(({ swapiService }) => {
+      const Service =
+        swapiService instanceof SwapiService ? DummySwapiService : SwapiService;
+      console.log(Service.name);
+      return {
+        swapiService: new Service()
+      };
+    });
+  };
+
   render() {
     const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
     return (
       <ErrorBoundry>
-        <SwapiServiceProvider value={this.swapiService}>
+        <SwapiServiceProvider value={this.state.swapiService}>
           <div className="stardb-app">
-            <Header />
+            <Header onServiceChange={this.onServiceChange} />
             <PersonDetails itemId={2} />
             <StarshipDetails itemId={9} />
             <PlanetDetails itemId={2} />

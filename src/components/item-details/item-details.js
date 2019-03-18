@@ -14,7 +14,7 @@ const Record = ({ field, label, item }) => {
 
 export { Record };
 
-export default class PersonDetails extends Component {
+export default class ItemDetails extends Component {
   state = {
     item: null,
     image: null,
@@ -26,7 +26,11 @@ export default class PersonDetails extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.personId !== prevProps.personId) {
+    if (
+      this.props.itemId !== prevProps.itemId ||
+      this.props.getData !== prevProps.getData ||
+      this.props.getImage !== prevProps.getImage
+    ) {
       this.setState({ loading: true });
       this.updateItem();
     }
@@ -51,10 +55,10 @@ export default class PersonDetails extends Component {
           .catch(e => this.onImgError(imgFb));
       })
 
-      .then(this.onPersonLoaded);
+      .then(this.onItemLoaded);
   }
 
-  onPersonLoaded = () => {
+  onItemLoaded = () => {
     this.setState({
       loading: false
     });
@@ -75,7 +79,7 @@ export default class PersonDetails extends Component {
     const spinner = loading ? <Spinner /> : null;
     const hasData = !loading;
     const content = hasData ? (
-      <PersonView item={item} image={image} data={data} />
+      <ItemView item={item} image={image} data={data} />
     ) : null;
 
     return (
@@ -86,7 +90,7 @@ export default class PersonDetails extends Component {
     );
   }
 }
-const PersonView = ({ item, image, data }) => {
+const ItemView = ({ item, image, data }) => {
   const { name } = item;
   return (
     <React.Fragment>
