@@ -39,29 +39,27 @@ export default class ItemDetails extends Component {
   updateItem() {
     const { itemId, getData, getImage, imgFb } = this.props;
 
-    if (!itemId) {
-      return;
-    }
     getData(itemId)
-      .then(item => {
-        this.setState({ item });
-        return item;
-      })
-      .then(item => {
-        getImage(item)
-          .then(item => {
-            this.setState({ image: item });
-          })
-          .catch(e => this.onImgError(imgFb));
-      })
-
-      .then(this.onItemLoaded);
+    .then(item => {
+      this.onItemLoaded(item, getImage, imgFb);
+    })
+    
   }
 
-  onItemLoaded = () => {
-    this.setState({
-      loading: false
-    });
+  onItemLoaded = (item, getImage, imgFb) => {
+    getImage(item)
+      .then(url => {
+        this.setState({
+          item,
+          image: url
+        });
+      })
+      .catch(e => this.onImgError(imgFb))
+      .then(() => {
+        this.setState({
+          loading:false
+        })
+      });
   };
 
   onImgError = imgFb => {
@@ -78,6 +76,7 @@ export default class ItemDetails extends Component {
     });
     const spinner = loading ? <Spinner /> : null;
     const hasData = !loading;
+  
     const content = hasData ? (
       <ItemView item={item} image={image} data={data} />
     ) : null;
@@ -94,7 +93,7 @@ const ItemView = ({ item, image, data }) => {
   const { name } = item;
   return (
     <React.Fragment>
-      <img className="person-image" src={image} />
+      <img className="person-image" src={image} alt='' />
 
       <div className="card-body">
         <h4>{name}</h4>

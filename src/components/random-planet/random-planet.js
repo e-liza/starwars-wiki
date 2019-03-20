@@ -4,7 +4,7 @@ import Spinner from '../spinner/';
 import ErrorIndicator from '../error-indicator/';
 import SwapiService from '../../services/swapi-service';
 
-//import errorGif from  './planet.gif';
+import errorGif from '../../assets/planet.gif';
 
 import './random-planet.css';
 
@@ -13,50 +13,81 @@ export default class RandomPlanet extends Component {
 
   state = {
     planet: {},
+    imgUrl: null,
     loading: true,
     error: false
   };
 
   componentDidMount() {
+    const { show } = this.props;
     this.updatePlanet();
-    this.interval = setInterval(this.updatePlanet, 5000);
+    this.toggleSlider(show);
   }
-  componentWillUnmount(){
+
+  componentWillUnmount() {
     clearInterval(this.interval);
   }
-
-
-
-  onPlanetLoaded = (planet) => {
-    this.setState({
-      planet,
-      loading: false,
-      error: false
-    })
+  toggleSlider = show => {
+    show
+      ? (this.interval = setInterval(this.updatePlanet, 5000))
+      : clearInterval(this.interval);
   };
-  onError = (err) => {
+  componentDidUpdate(prevProps) {
+    const { show } = this.props;
+    if (show !== prevProps.show) {
+      this.toggleSlider(show);
+    }
+  }
+
+  onError = err => {
     this.setState({
       error: true,
       loading: false
     });
   };
 
- 
-  updatePlanet=()=> {
-    const id = Math.floor(Math.random()*25) + 2;
+  onImgError = () => {
+    this.setState({
+      imgUrl: errorGif
+    });
+  };
+
+  onPlanetLoaded = planet => {
+    this.swapiService
+      .getPlanetImage(planet)
+      .then(url => {
+        this.setState({
+          planet,
+          imgUrl: url,
+          loading: false,
+          error: false
+        });
+      })
+      .catch(e =>
+        this.setState({
+          imgUrl: errorGif
+        })
+      );
+  };
+
+  updatePlanet = () => {
+    const id = Math.floor(Math.random() * 25) + 2;
     this.swapiService
       .getPlanet(id)
-      .then(this.onPlanetLoaded)
-      .catch(this.onError); 
-  }
+      .then(planet => {
+        this.onPlanetLoaded(planet);
+      })
+      .catch(this.onError);
+  };
 
   render() {
-    const { planet, loading, error } = this.state;
-
+    const { planet, imgUrl, loading, error } = this.state;
     const spinner = loading ? <Spinner /> : null;
     const errorMessage = error ? <ErrorIndicator /> : null;
     const hasData = !(loading || error);
-    const content = hasData ? <PlanetView planet={planet} /> : null;
+    const content = hasData ? (
+      <PlanetView planet={planet} imgUrl={imgUrl} />
+    ) : null;
 
     return (
       <div className="random-planet jumbotron rounded">
@@ -68,14 +99,12 @@ export default class RandomPlanet extends Component {
   }
 }
 
-const PlanetView = ({ planet }) => {
-  const { imgUrl, name, population, rotationPeriod, diameter} = planet;
+const PlanetView = ({ planet, imgUrl }) => {
+  const { name, population, rotationPeriod, diameter } = planet;
+
   return (
     <React.Fragment>
-      <img
-        className="planet-image"
-        src={imgUrl}
-      />
+      <img className="planet-image" src={imgUrl} alt='' />
       <div>
         <h4>{name}</h4>
         <ul className="list-group list-group-flush">

@@ -8,21 +8,15 @@ import DummySwapiService from '../../services/dummy-swapi-service';
 
 import { SwapiServiceProvider } from '../swapi-service-context';
 
-import {
-  PersonList,
-  PlanetList,
-  StarshipList,
-  PersonDetails,
-  PlanetDetails,
-  StarshipDetails
-} from '../sw-components';
+import { PeoplePage, PlanetsPage, StarshipsPage } from '../pages';
+
 
 import './app.css';
 
 export default class App extends Component {
   state = {
     showRandomPlanet: true,
-    swapiService: new DummySwapiService(),
+    swapiService: new SwapiService(),
     hasError: false
   };
 
@@ -42,7 +36,6 @@ export default class App extends Component {
     this.setState(({ swapiService }) => {
       const Service =
         swapiService instanceof SwapiService ? DummySwapiService : SwapiService;
-      console.log(Service.name);
       return {
         swapiService: new Service()
       };
@@ -50,18 +43,23 @@ export default class App extends Component {
   };
 
   render() {
-    const planet = this.state.showRandomPlanet ? <RandomPlanet /> : null;
+    const planet = <RandomPlanet show={this.state.showRandomPlanet} />;
+    const btnText = this.state.showRandomPlanet ? 'Stop Showing' : 'Show';
     return (
       <ErrorBoundry>
         <SwapiServiceProvider value={this.state.swapiService}>
           <div className="stardb-app">
             <Header onServiceChange={this.onServiceChange} />
-            <PersonDetails itemId={2} />
-            <StarshipDetails itemId={9} />
-            <PlanetDetails itemId={2} />
-            <PersonList />
-            <StarshipList />
-            <PlanetList />
+            {planet}
+            <button
+              className="toggle-planet btn btn-warning btn-lg"
+              onClick={this.toggleRandomPlanet}
+            >
+              {btnText} Random Planets
+            </button>
+            <PeoplePage/>
+            <PlanetsPage/>
+            <StarshipsPage/>
           </div>
         </SwapiServiceProvider>
       </ErrorBoundry>
