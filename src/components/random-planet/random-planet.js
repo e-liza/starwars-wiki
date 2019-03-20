@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Spinner from '../spinner/';
 import ErrorIndicator from '../error-indicator/';
@@ -21,13 +22,13 @@ export default class RandomPlanet extends Component {
   componentDidMount() {
     const { show, updateInterval } = this.props;
     this.updatePlanet();
-    this.toggleSlider(show, updateInterval);
+    this.toggleSlider(updateInterval)(show);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-  toggleSlider = (show, updateInterval) => {
+  toggleSlider = updateInterval => show => {
     show
       ? (this.interval = setInterval(this.updatePlanet, updateInterval))
       : clearInterval(this.interval);
@@ -101,6 +102,10 @@ export default class RandomPlanet extends Component {
 
 RandomPlanet.defaultProps = {
   updateInterval: 10000
+};
+
+RandomPlanet.propTypes = {
+  updateInterval: PropTypes.number
 };
 
 const PlanetView = ({ planet, imgUrl }) => {
