@@ -19,17 +19,17 @@ export default class RandomPlanet extends Component {
   };
 
   componentDidMount() {
-    const { show } = this.props;
+    const { show, updateInterval } = this.props;
     this.updatePlanet();
-    this.toggleSlider(show);
+    this.toggleSlider(show, updateInterval);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-  toggleSlider = show => {
+  toggleSlider = (show, updateInterval) => {
     show
-      ? (this.interval = setInterval(this.updatePlanet, 5000))
+      ? (this.interval = setInterval(this.updatePlanet, updateInterval))
       : clearInterval(this.interval);
   };
   componentDidUpdate(prevProps) {
@@ -99,12 +99,16 @@ export default class RandomPlanet extends Component {
   }
 }
 
+RandomPlanet.defaultProps = {
+  updateInterval: 10000
+};
+
 const PlanetView = ({ planet, imgUrl }) => {
   const { name, population, rotationPeriod, diameter } = planet;
 
   return (
     <React.Fragment>
-      <img className="planet-image" src={imgUrl} alt='' />
+      <img className="planet-image" src={imgUrl} alt="" />
       <div>
         <h4>{name}</h4>
         <ul className="list-group list-group-flush">
