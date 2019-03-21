@@ -10,6 +10,9 @@ import { SwapiServiceProvider } from '../swapi-service-context';
 
 import { PeoplePage, PlanetsPage, StarshipsPage } from '../pages';
 
+import { StarshipDetails } from '../sw-components';
+
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import './app.css';
 
@@ -48,19 +51,34 @@ export default class App extends Component {
     return (
       <ErrorBoundry>
         <SwapiServiceProvider value={this.state.swapiService}>
-          <div className="stardb-app">
-            <Header onServiceChange={this.onServiceChange} />
-            {planet}
-            <button
-              className="toggle-planet btn btn-warning btn-lg"
-              onClick={this.toggleRandomPlanet}
-            >
-              {btnText} Random Planets
-            </button>
-            <PeoplePage/>
-            <PlanetsPage/>
-            <StarshipsPage/>
-          </div>
+          <Router>
+            <div className="stardb-app">
+              <Header onServiceChange={this.onServiceChange} />
+              {planet}
+              <button
+                className="toggle-planet btn btn-warning btn-lg"
+                onClick={this.toggleRandomPlanet}
+              >
+                {btnText} Random Planets
+              </button>
+              <Route
+                path="/"
+                render={() => <h2>Welcome to StarWars Wiki</h2>}
+                exact
+              />
+              <Route path="/people" render={() => <h2>People</h2>} />
+              <Route path="/people/:id?" component={PeoplePage} />
+              <Route path="/planets" component={PlanetsPage} />
+              <Route path="/starships" component={StarshipsPage} exact />
+              <Route
+                path="/starships/:id"
+                render={({ match }) => {
+                  const { id } = match.params;
+                  return <StarshipDetails itemId={id} />;
+                }}
+              />
+            </div>
+          </Router>
         </SwapiServiceProvider>
       </ErrorBoundry>
     );

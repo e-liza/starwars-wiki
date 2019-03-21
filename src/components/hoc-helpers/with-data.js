@@ -12,8 +12,8 @@ const withData = View => {
       this.update();
     }
 
-    componentDidUpdate(prevProps){
-      if(this.props.getData!==prevProps.getData){
+    componentDidUpdate(prevProps) {
+      if (this.props.getData !== prevProps.getData) {
         this.update();
       }
     }

@@ -39,11 +39,9 @@ export default class ItemDetails extends Component {
   updateItem() {
     const { itemId, getData, getImage, imgFb } = this.props;
 
-    getData(itemId)
-    .then(item => {
+    getData(itemId).then(item => {
       this.onItemLoaded(item, getImage, imgFb);
-    })
-    
+    });
   }
 
   onItemLoaded = (item, getImage, imgFb) => {
@@ -57,8 +55,8 @@ export default class ItemDetails extends Component {
       .catch(e => this.onImgError(imgFb))
       .then(() => {
         this.setState({
-          loading:false
-        })
+          loading: false
+        });
       });
   };
 
@@ -76,7 +74,7 @@ export default class ItemDetails extends Component {
     });
     const spinner = loading ? <Spinner /> : null;
     const hasData = !loading;
-  
+
     const content = hasData ? (
       <ItemView item={item} image={image} data={data} />
     ) : null;
@@ -93,7 +91,7 @@ const ItemView = ({ item, image, data }) => {
   const { name } = item;
   return (
     <React.Fragment>
-      <img className="person-image" src={image} alt='' />
+      <img className="person-image" src={image} alt="" />
 
       <div className="card-body">
         <h4>{name}</h4>
