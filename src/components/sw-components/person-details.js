@@ -20,4 +20,8 @@ const mapMethodsToProps = swapiService => {
     getImage: swapiService.getPersonImage
   };
 };
+
+PersonDetails.defaultProps = {
+  itemId: 2
+};
 export default withSwapiService(mapMethodsToProps)(PersonDetails);

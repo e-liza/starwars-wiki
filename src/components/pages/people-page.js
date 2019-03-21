@@ -9,7 +9,10 @@ import ErrorBoundry from '../error-boundry';
 import Row from '../row';
 
 const PeoplePage = ({ history, match }) => {
+
+  
   const { id } = match.params;
+
   return (
     <ErrorBoundry>
       <Row

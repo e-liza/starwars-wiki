@@ -18,7 +18,7 @@ import {
 
 import { StarshipDetails } from '../sw-components';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './app.css';
 
@@ -74,12 +74,12 @@ export default class App extends Component {
               >
                 {btnText} Random Planets
               </button>
+              <Switch>
               <Route
                 path="/"
                 render={() => <h2>Welcome to StarWars Wiki</h2>}
                 exact
               />
-              <Route path="/people" render={() => <h2>People</h2>} />
               <Route path="/people/:id?" component={PeoplePage} />
               <Route path="/planets" component={PlanetsPage} />
               <Route path="/starships" component={StarshipsPage} exact />
@@ -100,6 +100,8 @@ export default class App extends Component {
                   <LoginPage isLoggedIn={isLoggedIn} onLogin={this.onLogin} />
                 )}
               />
+              <Route render={()=><h2>Page not found</h2>}/>
+              </Switch>
             </div>
           </Router>
         </SwapiServiceProvider>
